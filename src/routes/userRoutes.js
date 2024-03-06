@@ -1,5 +1,5 @@
 const Router = require('express');
-const { registerUser } = require('../controllers/userController');
+const userController  = require('../controllers/userController');
 const upload = require('./../middlewares/multer');
 
 const router = Router()
@@ -15,7 +15,7 @@ router.route('/register').post(
             maxCount: 1
         }
     ]),
-    registerUser
+    userController.registerUser
     )
 // router.route('/login').post(loginUser)
 

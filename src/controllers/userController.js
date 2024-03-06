@@ -1,8 +1,8 @@
 const asyncHandler = require("./../utils/asyncHandler");
 const ApiError = require("./../utils/apiError");
-const { User } = require("./../models/userModel");
-const { uploadOnCloudinary } = require("./../utils/cloudinary");
-const ApiResponse = require('./../utils/apiResponse');
+const  User  = require("./../models/userModel");
+const  uploadOnCloudinary  = require("./../utils/cloudinary");
+const ApiResponse = require("./../utils/apiResponse");
 
 exports.registerUser = asyncHandler(async (req, res) => {
   // get user details from frontend(postman right now)
@@ -15,15 +15,14 @@ exports.registerUser = asyncHandler(async (req, res) => {
   // check for user creation
   // return res
   const { userName, fullName, email, password } = req.body;
-  console.log("email:", email);
-
+  
   if (
     [fullName, email, userName, password].some((field) => field?.trim() === "")
   ) {
     throw new ApiError(400, "All fields are required");
   }
-
-  const existedUser = User.findOne({
+ 
+  const existedUser = await User.findOne({
     $or: [{ userName }, { email }],
   });
 
@@ -32,7 +31,13 @@ exports.registerUser = asyncHandler(async (req, res) => {
   }
 
   const avatarLocalPath = req.files?.avatar[0]?.path;
-  const coverImageLocalPath = req.files?.coverImage[0]?.path;
+//   const coverImageLocalPath = req.files?.coverImage[0]?.path;
+
+  let coverImageLocalPath;
+  if(req.files && Array.isArray(req.files.coverImage)&& req.files.coverImage.length > 0){
+    coverImageLocalPath = req.files.coverImage[0].path
+  }
+
 
   if (!avatarLocalPath) {
     throw new ApiError(400, "Avatar file is required");
@@ -61,7 +66,8 @@ exports.registerUser = asyncHandler(async (req, res) => {
     throw new ApiError(500, "Something went wrong while registering the user");
   }
 
-  return res.status(201).json(
-    new ApiResponse(200, createdUser, "User registerd Successfully")
-  )
+  return res
+    .status(201)
+    .json(new ApiResponse(200, createdUser, "User registerd Successfully"));
 });
+

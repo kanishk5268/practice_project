@@ -1,7 +1,9 @@
 const express = require("express");
 const cors = require("cors");
 const cookieParser = require("cookie-parser"); // used for crud operations, basically user ke stored cookies ko access kar sakta hun and then unko set bhi kar sakta hun
+const dotenv = require('dotenv');
 
+dotenv.config();
 const app = express();
 
 app.use(
