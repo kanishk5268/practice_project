@@ -2,7 +2,7 @@ const Router = require('express');
 const userController  = require('../controllers/userController');
 const upload = require('./../middlewares/multer');
 const verifyJWT = require('./../middlewares/auth');
-const router = Router()
+const router = Router();
 
 router.route('/register').post(
     upload.fields([
@@ -23,6 +23,8 @@ router.route('/login').post(userController.loginUser)
 
 //secured routes
 
-router.route("/logout").post(verifyJWT,userController.logoutUser)
+router.route("/logout").post(verifyJWT, userController.logoutUser)
+
+router.route("/refresh-token").post(userController.refreshAccessToken)
 
 module.exports = router
